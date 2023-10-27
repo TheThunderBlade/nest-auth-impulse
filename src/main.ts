@@ -1,8 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import * as cookieParser from 'cookie-parser';
+import { ValidationPipe } from './pipes/validation.pipe';
 
-async function bootstrap() {
+async function start() {
+    const PORT = process.env.PORT;
     const app = await NestFactory.create(AppModule);
-    await app.listen(3000);
+
+    app.use(cookieParser());
+    app.useGlobalPipes(new ValidationPipe());
+
+    await app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
 }
-bootstrap();
+start();
